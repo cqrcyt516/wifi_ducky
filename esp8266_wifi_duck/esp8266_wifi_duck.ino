@@ -14,7 +14,7 @@
 #define debug false
 
 /* ============= CHANGE WIFI CREDENTIALS ============= */
-const char *ssid = "WiFi Duck";
+const char *ssid = "WiFiDucky";
 const char *password = "quackquack"; //min 8 chars
 /* ============= ======================= ============= */
 
@@ -52,18 +52,19 @@ int bc = 0; //buffer counter
 int lc = 0; //line buffer counter
 
 
-void handleUpload(AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final){
-  File f;
-  
+void handleUpload(AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool total){
+  if(debug) Serial.printf("UploadStart: %s\n", filename.c_str());
+
   if(!filename.startsWith("/")) filename = "/" + filename;
-  
+
+  File f;
   if(!index) f = SPIFFS.open(filename, "w"); //create or trunicate file
   else f = SPIFFS.open(filename, "a"); //append to file (for chunked upload)
-  
+
   if(debug) Serial.write(data, len);
   f.write(data, len);
-  
-  if(final){ //upload finished
+
+  if(total){ //upload finished
 	  if(debug) Serial.printf("UploadEnd: %s, %u B\n", filename.c_str(), index+len);
 	  f.close();
   }
@@ -86,7 +87,6 @@ void sendSettings(AsyncWebServerRequest *request) {
 }
 
 void setup() {
-  
   Serial.begin(BAUD_RATE);
   delay(2000);
   if(debug) Serial.println("\nstarting...\nSSID: "+ (String)ssid +"\nPassword: "+ (String)password);
@@ -103,10 +103,10 @@ void setup() {
 	  runScript = true;
 	  runLine = true;
   }
-  
+
   WiFi.mode(WIFI_STA);
   WiFi.softAP(settings.ssid, settings.password, settings.channel, settings.hidden);
-  
+
   // ===== WebServer ==== //
   MDNS.addService("http","tcp",80);
 
@@ -185,7 +185,7 @@ void setup() {
 	  else settings.hidden = false;
 	  if(request->hasArg("autoExec")) settings.autoExec = true;
 	  else settings.autoExec = false;
-	  
+
 	  settings.save();
 	  if(debug) settings.print();
 
@@ -216,8 +216,8 @@ void setup() {
 		  File entry = dir.openFile("r");
 		  String filename = String(entry.name()).substring(1);
 		  output += '{';
-		  output += "\"n\":\"" + filename + "\",";//name
-		  output += "\"s\":\"" + formatBytes(entry.size()) + "\"";//size 
+		  output += "\"n\":\"" + filename + "\","; //name
+		  output += "\"s\":\"" + formatBytes(entry.size()) + "\""; //size
 		  output += "},";
 		  entry.close();
 	  }
@@ -287,10 +287,11 @@ void setup() {
     sendToIndex(request);
   });
 
-  server.on("/upload", HTTP_POST, [](AsyncWebServerRequest *request){
-    sendToIndex(request);
-  }, handleUpload);
-  
+  server.on("/upload", HTTP_POST,
+      [](AsyncWebServerRequest *request){ sendToIndex(request); },
+      [](AsyncWebServerRequest *request, const String& filename, size_t index, uint8_t *data,
+          size_t len, bool final) {handleUpload(request, filename, index, data, len, final);});
+
   server.onNotFound([](AsyncWebServerRequest *request){
     send404(request);
   });
@@ -332,15 +333,16 @@ void setup() {
     }
     if(final){
       if(Update.end(true)){
-		if(debug) Serial.printf("Update Success: %uB\n", index+len);
+		    if(debug) Serial.printf("Update Success: %uB\n", index+len);
+        shouldReboot = true; //Set flag so main loop can issue restart call
       } else {
-		if(debug) Update.printError(Serial);
+		    if(debug) Update.printError(Serial);
       }
     }
   });
-  
+
   server.begin();
-  
+
   if(debug) Serial.println("started");
 }
 
@@ -361,7 +363,7 @@ void addToBuffer(){
 
 void loop() {
   if(shouldReboot) ESP.restart();
-  
+
   if(Serial.available()) {
     uint8_t answer = Serial.read();
     if(answer == 0x99) {
@@ -392,5 +394,4 @@ void loop() {
       script.close();
     }
   }
-
 }

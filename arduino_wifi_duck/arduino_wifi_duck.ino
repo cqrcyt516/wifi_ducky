@@ -1,6 +1,7 @@
 #include <Keyboard.h>
 #define BAUD_RATE 57200
-
+#define program_pin 9
+#define enable_pin 10
 #define ExternSerial Serial1
 
 String bufferStr = "";
@@ -92,8 +93,10 @@ void setup() {
   Serial.begin(BAUD_RATE);
   ExternSerial.begin(BAUD_RATE);
 
-  pinMode(13,OUTPUT);
-  digitalWrite(13,HIGH);
+  pinMode(enable_pin, OUTPUT);
+  pinMode(program_pin, OUTPUT);
+  digitalWrite(program_pin, HIGH);
+  digitalWrite(enable_pin, HIGH);
 
   Keyboard.begin();
 }
@@ -128,4 +131,3 @@ void loop() {
     Serial.println("done");
   }
 }
-
