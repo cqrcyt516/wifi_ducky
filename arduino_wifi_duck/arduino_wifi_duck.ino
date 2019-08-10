@@ -122,7 +122,7 @@ void Press(String b) {
   else if (b.equals("INSERT")) Keyboard.press(KEY_INSERT);
   else if (b.equals("TAB")) Keyboard.press(KEY_TAB);
   else if (b.equals("END")) Keyboard.press(KEY_END);
-  else if (b.equals("CAPSLOCK")) Keyboard.press(KEY_CAPS_LOCK);
+  else if (b.equals("CAPSLOCK") || b.equals("CAPS")) Keyboard.press(KEY_CAPS_LOCK);
   else if (b.equals("F1")) Keyboard.press(KEY_F1);
   else if (b.equals("F2")) Keyboard.press(KEY_F2);
   else if (b.equals("F3")) Keyboard.press(KEY_F3);
