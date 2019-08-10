@@ -60,7 +60,7 @@ void Settings::save() {
 void Settings::reset() {
   if (debug) Serial.println("[E] Reset Settings");
 
-  String _ssid = "WiFi Duck";
+  String _ssid = "WiFiDucky";
   _ssid.toCharArray(ssid, 32);
   ssidLen = _ssid.length();
 
