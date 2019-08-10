@@ -112,7 +112,7 @@ void Press(String b) {
   else if (b.equals("DOWN") || b.equals("DOWNARROW")) Keyboard.press(KEY_DOWN_ARROW);
   else if (b.equals("LEFT") || b.equals("LEFTARROW")) Keyboard.press(KEY_LEFT_ARROW);
   else if (b.equals("RIGHT") || b.equals("RIGHTARROW")) Keyboard.press(KEY_RIGHT_ARROW);
-  else if (b.equals("DELETE")) Keyboard.press(KEY_DELETE);
+  else if (b.equals("DELETE") || b.equals("DEL")) Keyboard.press(KEY_DELETE);
   else if (b.equals("PAGEUP")) Keyboard.press(KEY_PAGE_UP);
   else if (b.equals("PAGEDOWN")) Keyboard.press(KEY_PAGE_DOWN);
   else if (b.equals("HOME")) Keyboard.press(KEY_HOME);
