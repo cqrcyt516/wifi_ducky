@@ -107,6 +107,7 @@ void Press(String b) {
   else if (b.equals("CTRL") || b.equals("CONTROL")) Keyboard.press(KEY_LEFT_CTRL);
   else if (b.equals("SHIFT")) Keyboard.press(KEY_LEFT_SHIFT);
   else if (b.equals("ALT")) Keyboard.press(KEY_LEFT_ALT);
+  else if (b.equals("ALTGR")) Keyboard.press(KEY_RIGHT_ALT);
   else if (b.equals("GUI") || b.equals("WINDOWS")) Keyboard.press(KEY_LEFT_GUI);
   else if (b.equals("UP") || b.equals("UPARROW")) Keyboard.press(KEY_UP_ARROW);
   else if (b.equals("DOWN") || b.equals("DOWNARROW")) Keyboard.press(KEY_DOWN_ARROW);
