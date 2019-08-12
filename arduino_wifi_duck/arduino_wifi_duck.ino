@@ -14,20 +14,24 @@ int secondSpace;
 String command = "";
 String arg1 = "";
 String arg2 = "";
+float mouseMul = 1.0;
 
 int defaultDelay = 0;
 
 void MouseMove(int x, int y) {
   // Use Mouse.move() for larger values
-  for(int i=0; (x>0)?(i<x/100):(i>x/100); (x>0)?(i++):(i--)) 
+  x=(int)x*mouseMul;
+  y=(int)y*mouseMul;
+  for(int i=0; (x>0)?(i<x/100):(i>x/100); (x>0)?(i++):(i--))
     Mouse.move((x>0)?(100):(-100), 0); // Move in X-axis
-  for(int j=0; (y>0)?(j<y/100):(j>y/100); (y>0)?(j++):(j--)) 
+  for(int j=0; (y>0)?(j<y/100):(j>y/100); (y>0)?(j++):(j--))
     Mouse.move(0, (y>0)?(100):(-100)); // Move in Y-axis
   Mouse.move(x%100, y%100);
 }
 
 void MouseMove(int x, int y, int w) {
-  for(int k=0; (w>0)?(k<w/100):(k>w/100); (w>0)?(k++):(k--)) 
+  w=(int)w*mouseMul;
+  for(int k=0; (w>0)?(k<w/100):(k>w/100); (w>0)?(k++):(k--))
     Mouse.move(0, 0, (w>0)?(100):(-100)); // Scroll
   Mouse.move(0, 0, w%100);
   MouseMove(x, y);
@@ -79,6 +83,9 @@ void Line(String _line) {
   } else if (command == "ASCII"){
     // Enter character using ascii number
     Keyboard.write(arg1.toInt());
+  } else if (command == "MOUSEMUL") {
+    // Set mouse multiplier
+    mouseMul = arg1.toFloat();
   } else if (command == "SCROLL") {
     // Mouse scroll wheel
     MouseMove(0, 0, arg1.toInt());
@@ -93,7 +100,7 @@ void Line(String _line) {
     MouseMove(arg1.toInt(), arg2.toInt());
   } else if (command == "MOUSEABS") {
     // Mouse absolute X,Y
-    MouseMove(-7680, -4320);
+    MouseMove(-3840, -2160);
     MouseMove(arg1.toInt(), arg2.toInt());
   } else {
     // Multi-key press (ex: CTRL ALT DEL)
