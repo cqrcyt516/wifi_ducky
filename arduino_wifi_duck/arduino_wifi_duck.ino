@@ -91,6 +91,10 @@ void Line(String _line) {
   } else if (command == "MOUSE") {
     // Mouse X,Y motion
     MouseMove(arg1.toInt(), arg2.toInt());
+  } else if (command == "MOUSEABS") {
+    // Mouse absolute X,Y
+    MouseMove(-7680, -4320);
+    MouseMove(arg1.toInt(), arg2.toInt());
   } else {
     // Multi-key press (ex: CTRL ALT DEL)
     String remain = _line;
