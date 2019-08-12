@@ -28,7 +28,7 @@ void MouseMove(int x, int y) {
 
 void MouseMove(int x, int y, int w) {
   for(int k=0; (w>0)?(k<w/100):(k>w/100); (w>0)?(k++):(k--)) 
-    Mouse.move(0, (w>0)?(100):(-100)); // Scroll
+    Mouse.move(0, 0, (w>0)?(100):(-100)); // Scroll
   Mouse.move(0, 0, w%100);
   MouseMove(x, y);
 }
